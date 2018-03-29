@@ -10,8 +10,8 @@ class Deck < ApplicationRecord
 
   def self.starter_deck
     deck = []
-    7.times {deck.push(32)}
-    3.times {deck.push(36)}
+    7.times {deck.push("copper")}
+    3.times {deck.push("estate")}
     deck
   end
 end

@@ -32,8 +32,8 @@ describe("Game API") do
       expect(decks.first[:discard]).to be_a(Array)
       expect(decks.first[:discard].count).to eq(0)
       expect(decks.first[:deck_makeup].keys.count).to eq(2)
-      expect(decks.first[:deck_makeup][:"32"]).to eq(7)
-      expect(decks.first[:deck_makeup][:"36"]).to eq(3)
+      expect(decks.first[:deck_makeup][:copper]).to eq(7)
+      expect(decks.first[:deck_makeup][:estate]).to eq(3)
       # copper = 32, estate = 36
     end
   end

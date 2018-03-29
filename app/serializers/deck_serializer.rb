@@ -5,9 +5,9 @@ class DeckSerializer < ActiveModel::Serializer
     full_deck = []
     full_deck << object.draw
     full_deck << object.discard
-    full_deck.flatten.reduce({}) do |result, card_id|
-      result[card_id] = 0 if !result[card_id]
-      result[card_id] += 1
+    full_deck.flatten.reduce({}) do |result, card_name|
+      result[card_name] = 0 if !result[card_name]
+      result[card_name] += 1
       result
     end
   end
