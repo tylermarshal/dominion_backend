@@ -14,4 +14,20 @@ class Card < ApplicationRecord
              :cornucopia,
              :guilds,
              :promo]
+
+  non_kingdom_cards = [
+    'Copper',
+    'Curse',
+    'Estate',
+    'Silver',
+    'Duchy',
+    'Gold',
+    'Province',
+    'Platinum',
+    'Colony'
+  ]
+
+  scope :kingdom, -> {
+    where.not(name: non_kingdom_cards)
+  }
 end
