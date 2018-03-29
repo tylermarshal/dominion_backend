@@ -19,7 +19,7 @@ class GameCard < ApplicationRecord
       #provice
       GameCard.new(card_id: 63, quantity: 10)
     ]
-    kingdom_cards = Card.all.sample(10)
+    kingdom_cards = Card.kingdom.sample(10)
     kingdom_cards.each do |kingdom_card|
       game_cards << GameCard.new(card_id: kingdom_card.id, quantity: 10)
     end
