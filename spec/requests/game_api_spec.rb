@@ -13,20 +13,27 @@ describe("Game API") do
       expect(response).to be_success
       new_game = JSON.parse(response.body, symbolize_names: true)
 
-      new_game_id = Game.last.id
+      new_game_id_from_db = Game.last.id
 
-      expect(new_game[:competitors]).to eq([player_1.id, player_2.id])
-      expect(new_game[:game_cards].count).to eq(17)
-      expect(new_game[:game_cards]).to be_a(Hash)
-      expect(new_game[:game_id]).to eq(new_game_id)
-      expect(new_game[:decks].count).to eq(2)
-      expect(new_game[:decks].first[:competitor_id]).to be_a(Integer)
-      expect(new_game[:decks].first[:id]).to be_a(Integer)
-      expect(new_game[:decks].first[:draw]).to be_a(Array)
-      expect(new_game[:decks].first[:draw].count).to eq(10)
-      expect(new_game[:decks].first[:discard]).to be_a(Array)
-      expect(new_game[:decks].first[:discard].count).to eq(0)
-      expect(new_game[:decks].first[:deck_makeup]).to eq({"32" => 7, "36" => 3})
+      competitors = new_game[:competitors]
+      game_cards = new_game[:game_cards]
+      new_game_id = new_game[:game_id]
+      decks = new_game[:decks]
+
+      expect(competitors).to eq([player_1.id, player_2.id])
+      expect(game_cards).to be_a(Hash)
+      expect(game_cards.count).to eq(17)
+      expect(new_game_id).to eq(new_game_id_from_db)
+      expect(decks.count).to eq(2)
+      expect(decks.first[:competitor_id]).to be_a(Integer)
+      expect(decks.first[:id]).to be_a(Integer)
+      expect(decks.first[:draw]).to be_a(Array)
+      expect(decks.first[:draw].count).to eq(10)
+      expect(decks.first[:discard]).to be_a(Array)
+      expect(decks.first[:discard].count).to eq(0)
+      expect(decks.first[:deck_makeup].keys.count).to eq(2)
+      expect(decks.first[:deck_makeup][:"32"]).to eq(7)
+      expect(decks.first[:deck_makeup][:"36"]).to eq(3)
       # copper = 32, estate = 36
     end
   end
