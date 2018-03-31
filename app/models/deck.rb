@@ -1,6 +1,5 @@
 class Deck < ApplicationRecord
   belongs_to :competitor
-  belongs_to :player, through: :competitor
   belongs_to :game
 
   def self.new_game(competitor_id)
