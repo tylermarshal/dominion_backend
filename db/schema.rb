@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180327170643) do
+ActiveRecord::Schema.define(version: 20180329221641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 20180327170643) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.citext "set"
+    t.index ["name"], name: "index_cards_on_name"
   end
 
   create_table "competitors", force: :cascade do |t|
@@ -36,8 +37,8 @@ ActiveRecord::Schema.define(version: 20180327170643) do
 
   create_table "decks", force: :cascade do |t|
     t.bigint "game_id"
-    t.integer "draw", array: true
-    t.integer "discard", array: true
+    t.string "draw", array: true
+    t.string "discard", array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "competitor_id"
