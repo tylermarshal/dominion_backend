@@ -7,6 +7,7 @@ class Turn < ApplicationRecord
     turn = params["turn"]
     game.update_decks(params["decks"])
     game.update_game_card_quantities(turn['cards_gained'])
+    game.update_trash(params["cards_trashed"])
     turn = Turn.new(
       game: game,
       competitor_id: turn["competitor_id"],
