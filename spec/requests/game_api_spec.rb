@@ -55,7 +55,8 @@ describe("Game API") do
       deck_1_new_discard = ['copper', 'copper', 'copper', 'estate', 'estate', 'silver']
 
       cards_played = ['copper', 'copper', 'copper']
-      cards_bought = ['silver']
+      cards_gained = ['silver']
+      cards_trashed = []
 
       params = {
         decks: [
@@ -74,7 +75,8 @@ describe("Game API") do
           competitor_id: deck_1.competitor.id,
           coins: 3,
           cards_played: cards_played,
-          cards_bought: cards_bought
+          cards_gained: cards_gained,
+          cards_trashed: cards_trashed
           }
         }
 
@@ -93,7 +95,8 @@ describe("Game API") do
       expect(new_turn.competitor).to eq(deck_1.competitor)
       expect(new_turn.coins).to eq(3)
       expect(new_turn.cards_played).to eq(cards_played)
-      expect(new_turn.cards_bought).to eq(cards_bought)
+      expect(new_turn.cards_gained).to eq(cards_gained)
+      expect(new_turn.cards_trashed).to eq(cards_trashed)
     end
   end
 end
