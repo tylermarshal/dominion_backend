@@ -4,6 +4,7 @@ class Game < ApplicationRecord
   has_many :decks
   has_many :competitors
   has_many :players, through: :competitors
+  has_many :turns
 
   after_save :create_decks
 
@@ -20,8 +21,27 @@ class Game < ApplicationRecord
   end
 
   def create_decks
-    competitors.each do |competitor|
-      decks << Deck.new_game(competitor.id)
+    if decks.count == 0
+      competitors.each do |competitor|
+        decks << Deck.new_game(competitor.id)
+      end
+    end
+  end
+
+  def update_decks(deck_changes)
+    deck_changes.each do |deck_updates|
+      deck = decks.find(deck_updates["deck_id"])
+      deck.update(
+        draw: deck_updates["draw"],
+        discard: deck_updates["discard"]
+      )
+    end
+  end
+
+  def update_game_card_quantities(cards_bought)
+    cards_bought.each do |card|
+      game_card = game_cards.find_by(card_id: Card.find_by(name: card).id)
+      game_card.update(quantity: (game_card.quantity - 1) )
     end
   end
 end
