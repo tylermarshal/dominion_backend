@@ -4,6 +4,7 @@ class Game < ApplicationRecord
   has_many :decks
   has_many :competitors
   has_many :players, through: :competitors
+  has_many :turns
 
   after_save :create_decks
 
@@ -20,8 +21,10 @@ class Game < ApplicationRecord
   end
 
   def create_decks
-    competitors.each do |competitor|
-      decks << Deck.new_game(competitor.id)
+    if decks.count == 0
+      competitors.each do |competitor|
+        decks << Deck.new_game(competitor.id)
+      end
     end
   end
 end
