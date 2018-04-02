@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180331234610) do
+ActiveRecord::Schema.define(version: 20180401035422) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,8 @@ ActiveRecord::Schema.define(version: 20180331234610) do
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "trash", array: true
+    t.integer "status", default: 0
   end
 
   create_table "players", force: :cascade do |t|
@@ -71,7 +73,8 @@ ActiveRecord::Schema.define(version: 20180331234610) do
     t.bigint "competitor_id"
     t.integer "coins"
     t.string "cards_played", array: true
-    t.string "cards_bought", array: true
+    t.string "cards_gained", array: true
+    t.string "cards_trashed", array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["competitor_id"], name: "index_turns_on_competitor_id"

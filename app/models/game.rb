@@ -8,8 +8,10 @@ class Game < ApplicationRecord
 
   after_save :create_decks
 
+  enum status: [:active, :complete]
+
   def self.new_game(players)
-    new_game = Game.new
+    new_game = Game.new(trash: [])
     if Player.exists?(id: players)
       players.each do |player_id|
         player = Player.find(player_id)
@@ -38,10 +40,16 @@ class Game < ApplicationRecord
     end
   end
 
-  def update_game_card_quantities(cards_bought)
-    cards_bought.each do |card|
+  def update_game_card_quantities(cards_gained)
+    cards_gained.each do |card|
       game_card = game_cards.find_by(card_id: Card.find_by(name: card).id)
       game_card.update(quantity: (game_card.quantity - 1) )
+    end
+  end
+
+  def update_trash(trashed_cards)
+    trashed_cards.each do |card|
+      trash << card
     end
   end
 end
