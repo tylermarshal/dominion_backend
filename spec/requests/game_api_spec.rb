@@ -104,4 +104,46 @@ describe("Game API") do
       expect(new_turn.cards_trashed).to eq(cards_trashed)
     end
   end
+
+  context("Get Game") do
+    it("gets game with id") do
+      player_1 = create(:player)
+      player_2 = create(:player)
+
+      params = {competitors: [player_1.id, player_2.id]}
+
+      new_game = Game.new_game(params[:competitors])
+      new_game.save!
+
+      get "/api/v1/games/#{new_game.id}"
+
+      expect(response).to be_success
+      game_state = JSON.parse(response.body, symbolize_names: true)
+
+      competitors = game_state[:competitors]
+      trash = game_state[:trash]
+      status = game_state[:status]
+      game_cards = game_state[:game_cards]
+      game_state_id = game_state[:game_id]
+      decks = game_state[:decks]
+
+      expect(competitors).to eq(new_game.competitors.pluck(:id))
+      expect(trash).to be_a(Array)
+      expect(trash).to be_empty
+      expect(status).to eq('active')
+      expect(game_cards).to be_a(Hash)
+      expect(game_cards.count).to eq(17)
+      expect(game_state_id).to eq(new_game.id)
+      expect(decks.count).to eq(2)
+      expect(decks.first[:competitor_id]).to be_a(Integer)
+      expect(decks.first[:id]).to be_a(Integer)
+      expect(decks.first[:draw]).to be_a(Array)
+      expect(decks.first[:draw].count).to eq(10)
+      expect(decks.first[:discard]).to be_a(Array)
+      expect(decks.first[:discard].count).to eq(0)
+      expect(decks.first[:deck_makeup].keys.count).to eq(2)
+      expect(decks.first[:deck_makeup][:copper]).to eq(7)
+      expect(decks.first[:deck_makeup][:estate]).to eq(3)
+    end
+  end
 end
