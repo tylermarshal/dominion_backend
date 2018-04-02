@@ -11,7 +11,7 @@ class Game < ApplicationRecord
   enum status: [:active, :complete]
 
   def self.new_game(players)
-    new_game = Game.new
+    new_game = Game.new(trash: [])
     if Player.exists?(id: players)
       players.each do |player_id|
         player = Player.find(player_id)
