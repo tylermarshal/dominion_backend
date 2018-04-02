@@ -1,5 +1,5 @@
 class GameSerializer < ActiveModel::Serializer
-  attributes :game_id, :competitors, :game_cards
+  attributes :game_id, :competitors, :game_cards, :trash, :status
 
   has_many :decks
 
