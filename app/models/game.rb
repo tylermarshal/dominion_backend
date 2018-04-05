@@ -13,6 +13,8 @@ class Game < ApplicationRecord
   def self.new_game(players)
     new_game = Game.new(trash: [])
     if Player.exists?(id: players)
+      new_game.current_player = players.first
+      new_game.turn_order = players
       players.each do |player_id|
         player = Player.find(player_id)
         new_game.players << player
