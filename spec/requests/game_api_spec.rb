@@ -22,7 +22,7 @@ describe("Game API") do
       new_game_id = new_game[:game_id]
       decks = new_game[:decks]
 
-      expect(competitors).to eq(new_game_from_db.competitors.pluck(:id))
+      expect(competitors).to eq(new_game_from_db.competitors.pluck(:player_id))
       expect(trash).to be_a(Array)
       expect(trash).to be_empty
       expect(status).to eq('active')
@@ -39,6 +39,8 @@ describe("Game API") do
       expect(decks.first[:deck_makeup].keys.count).to eq(2)
       expect(decks.first[:deck_makeup][:copper]).to eq(7)
       expect(decks.first[:deck_makeup][:estate]).to eq(3)
+      expect(current_player).to eq(player_1.id)
+      expect(turn_order.count).to eq(2)
     end
   end
 
