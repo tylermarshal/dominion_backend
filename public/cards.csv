@@ -40,20 +40,22 @@ Cellar,Dominion,1,,,,,,,2,,1,,,,,Discard any number of cards. +1 Card per card d
 Chapel,Dominion,1,,,,,,,2,,,,,,,Trash up to 4 cards from your hand.
 Estate,Dominion,,,,,,,1,2,,,,,,1,
 Moat,Dominion,1,,,,1,,,2,,,,2,,,"When another player plays an Attack card, you may reveal this from your hand. If you do, you are unaffected by that Attack."
-Chancellor,Dominion,1,,,,,,,3,,,,,2,,You may immediately put your deck into your discard pile.
+Harbinger,Dominion,1,,,,,,,3,,,,,,,
+Merchant,Dominion,1,,,,,,,3,,,,,,,
+Vassal,Dominion,1,,,,,,,3,,,,,,,
+Poacher,Dominion,1,,,,,,,4,,,,,,,
+Bandit,Dominion,1,,,,,,,5,,,,,,,
+Sentry,Dominion,1,,,,,,,5,,,,,,,
+Artisan,Dominion,1,,,,,,,6,,,,,,,
 Silver,Dominion,,,,,,1,,3,,,,,2,,
 Village,Dominion,1,,,,,,,3,,2,,1,,,
-Woodcutter,Dominion,1,,,,,,,3,,,1,,2,,
 Workshop,Dominion,1,,,,,,,3,,,,,,,Gain a card costing up to 4 Coins.
 Bureaucrat,Dominion,1,1,,,,,,4,,,,,,,Gain a Silver card; put it on top of your deck. Each other player reveals a Victory card from his hand and puts it on his deck (or reveals a hand with no Victory cards).
-Feast,Dominion,1,,,,,,,4,,,,,,,Trash this card. Gain a card costing  up to 5 Coins.
 Gardens,Dominion,,,,,,,1,4,,,,,,,Worth 1P for every 10 cards in your deck (rounded down).
 Militia,Dominion,1,1,,,,,,4,,,,,2,,Each other player discards down to 3 cards in his hand.
 Moneylender,Dominion,1,,,,,,,4,,,,,,,"Trash a Copper card from your hand. If you do, +3 Coins."
 Remodel,Dominion,1,,,,,,,4,,,,,,,Trash a card from your hand. Gain a card costing up to 2 Coins more than the trashed card.
 Smithy,Dominion,1,,,,,,,4,,,,3,,,
-Spy,Dominion,1,1,,,,,,4,,1,,1,,,"Each player (including you) reveals the top card of his deck and either discards it or puts it back, your choice."
-Thief,Dominion,1,1,,,,,,4,,,,,,,"Each other player reveals the top 2 cards of his deck. If they revealed any Treasure cards, they trash one of them that you choose. You may gain any or all of these trashed cards. They discard the other revealed cards."
 Throne Room,Dominion,1,,,,,,,4,,,,,,,Choose an Action card in your  hand. Play it twice.
 Council Room,Dominion,1,,,,,,,5,,,1,4,,,Each other player draws a card.
 Duchy,Dominion,,,,,,,1,5,,,,,,3,
@@ -63,7 +65,6 @@ Library,Dominion,1,,,,,,,5,,,,,,,"Draw until you have 7 cards in hand. You may s
 Market,Dominion,1,,,,,,,5,,1,1,1,1,,
 Mine,Dominion,1,,,,,,,5,,,,,,,Trash a Treasure card from your hand. Gain a Treasure card costing up to 3 more; put it into your hand.
 Witch,Dominion,1,1,,,,,,5,,,,2,,,Each other player gains a Curse card.
-Adventurer,Dominion,1,,,,,,,6,,,,,,,Reveal cards from your deck until you reveal 2 Treasure  cards. Put those Treasure cards into your hand and discard the other revealed cards.
 Gold,Dominion,,,,,,1,,6,,,,,3,,
 Province,Dominion,,,,,,,1,8,,,,,,6,
 Crossroads,Hinterlands,1,,,,,,,2,,,,,,,"Reveal your hand. +1 per Victory card revealed. If this is the first time you played a Crossroads this turn, +3 Actions."
