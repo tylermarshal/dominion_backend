@@ -5,21 +5,21 @@ class GameCard < ApplicationRecord
   def self.new_game
     game_cards = [
       #copper
-      GameCard.new(card_id: 32, quantity: 40),
+      GameCard.new(card_id: Card.find_by(name: 'copper').id, quantity: 40),
       #curse
-      GameCard.new(card_id: 33, quantity: 10),
+      GameCard.new(card_id: Card.find_by(name: 'curse').id, quantity: 10),
       #silver
-      GameCard.new(card_id: 39, quantity: 30),
+      GameCard.new(card_id: Card.find_by(name: 'silver').id, quantity: 30),
       #gold
-      GameCard.new(card_id: 62, quantity: 30),
+      GameCard.new(card_id: Card.find_by(name: 'gold').id, quantity: 30),
       #estate
-      GameCard.new(card_id: 36, quantity: 10),
+      GameCard.new(card_id: Card.find_by(name: 'estate').id, quantity: 10),
       #duchy
-      GameCard.new(card_id: 54, quantity: 10),
+      GameCard.new(card_id: Card.find_by(name: 'duchy').id, quantity: 10),
       #provice
-      GameCard.new(card_id: 63, quantity: 10)
+      GameCard.new(card_id: Card.find_by(name: 'province').id, quantity: 10)
     ]
-    kingdom_cards = Card.kingdom.sample(10)
+    kingdom_cards = Card.kingdom.where(set: :dominion).sample(10)
     kingdom_cards.each do |kingdom_card|
       game_cards << GameCard.new(card_id: kingdom_card.id, quantity: 10)
     end

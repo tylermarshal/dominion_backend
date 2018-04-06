@@ -28,6 +28,6 @@ class Card < ApplicationRecord
   ]
 
   scope :kingdom, -> {
-    where(set: :dominion).where.not(name: non_kingdom_cards)
+    where.not(name: non_kingdom_cards)
   }
 end
