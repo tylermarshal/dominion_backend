@@ -2,7 +2,6 @@ class GameSerializer < ActiveModel::Serializer
   attributes :game_id, :competitors, :game_cards, :trash, :status, :current_player, :turn_order
 
   has_many :decks
-  has_many :competitors
 
   def game_id
     object.id

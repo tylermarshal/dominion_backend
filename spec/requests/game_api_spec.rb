@@ -30,7 +30,7 @@ describe("Game API") do
       expect(game_cards.count).to eq(17)
       expect(new_game_id).to eq(new_game_from_db.id)
       expect(decks.count).to eq(2)
-      expect(decks.first[:competitor_id]).to be_a(Integer)
+      expect(decks.first[:player_id]).to be_a(Integer)
       expect(decks.first[:id]).to be_a(Integer)
       expect(decks.first[:draw]).to be_a(Array)
       expect(decks.first[:draw].count).to eq(10)
@@ -39,8 +39,8 @@ describe("Game API") do
       expect(decks.first[:deck_makeup].keys.count).to eq(2)
       expect(decks.first[:deck_makeup][:copper]).to eq(7)
       expect(decks.first[:deck_makeup][:estate]).to eq(3)
-      expect(current_player).to eq(player_1.id)
-      expect(turn_order.count).to eq(2)
+      expect(new_game[:current_player]).to eq(player_1.id)
+      expect(new_game[:turn_order].count).to eq(2)
     end
   end
 
@@ -137,7 +137,7 @@ describe("Game API") do
       expect(game_cards.count).to eq(17)
       expect(game_state_id).to eq(new_game.id)
       expect(decks.count).to eq(2)
-      expect(decks.first[:competitor_id]).to be_a(Integer)
+      expect(decks.first[:player_id]).to be_a(Integer)
       expect(decks.first[:id]).to be_a(Integer)
       expect(decks.first[:draw]).to be_a(Array)
       expect(decks.first[:draw].count).to eq(10)
