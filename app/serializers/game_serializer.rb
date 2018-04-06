@@ -16,7 +16,7 @@ class GameSerializer < ActiveModel::Serializer
 
   def game_cards
     object.game_cards.reduce({}) do |result, game_card|
-      result[game_card.card.name] = game_card.quantity
+      result[game_card.card.name.downcase] = game_card.quantity
       result
     end
   end
