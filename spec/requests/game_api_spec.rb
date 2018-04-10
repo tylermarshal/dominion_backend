@@ -114,6 +114,7 @@ describe("Game API") do
       expect(new_turn.cards_played).to eq(cards_played)
       expect(new_turn.cards_gained).to eq(cards_gained)
       expect(new_turn.cards_trashed).to eq(cards_trashed)
+			expect(game.current_player).to eq(player_2.id)
     end
   end
 

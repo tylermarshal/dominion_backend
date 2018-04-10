@@ -18,5 +18,6 @@ class Turn < ApplicationRecord
       cards_trashed: turn["cards_trashed"]
     )
 		game.set_current_player
+		turn
   end
 end
