@@ -46,10 +46,10 @@ class Game < ApplicationRecord
 		end
 	end
 
-  def update_game_card_quantities(cards_gained)
-    cards_gained.each do |card|
+  def update_game_card_quantities(supply)
+    supply.each do |card|
       game_card = game_cards.find_by(card_id: Card.find_by(name: card).id)
-      game_card.update(quantity: (game_card.quantity - 1) )
+      game_card.update(quantity: supply[card])
     end
   end
 
