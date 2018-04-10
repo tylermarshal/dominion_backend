@@ -56,4 +56,8 @@ class Game < ApplicationRecord
   def update_trash(trashed_cards)
     update(trash: trashed_cards)
   end
+
+	def set_current_player
+		update(current_player: turn_order[(turns.count + 1) % competitors.count])
+	end
 end
