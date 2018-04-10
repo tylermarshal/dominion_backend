@@ -9,7 +9,6 @@ class Turn < ApplicationRecord
 		game.update_attacks(params["attack_stack"])
     game.update_game_card_quantities(params['supply'])
     game.update_trash(params['trash'])
-		game.set_current_player
     turn = Turn.new(
       game: game,
       competitor_id: game.competitors.find_by(player_id: game.current_player).id,
@@ -18,5 +17,6 @@ class Turn < ApplicationRecord
       cards_gained: turn["cards_gained"],
       cards_trashed: turn["cards_trashed"]
     )
+		game.set_current_player
   end
 end
