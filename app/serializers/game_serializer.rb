@@ -8,7 +8,10 @@ class GameSerializer < ActiveModel::Serializer
 						 :turn_order,
 						 :attack_stack
 
+
   has_many :decks
+  has_many :turns
+	
 
   def game_id
     object.id
