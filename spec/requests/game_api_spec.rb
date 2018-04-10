@@ -41,6 +41,8 @@ describe("Game API") do
       expect(decks.first[:deck_makeup][:estate]).to eq(3)
       expect(new_game[:current_player]).to eq(player_1.id)
       expect(new_game[:turn_order].count).to eq(2)
+			expect(new_game[:attack_stack].keys.count).to eq(2)
+			expect(new_game[:attack_stack][new_game[:current_player].to_s.to_sym]).to be_a Array
     end
   end
 

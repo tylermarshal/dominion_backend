@@ -1,5 +1,12 @@
 class GameSerializer < ActiveModel::Serializer
-  attributes :game_id, :competitors, :game_cards, :trash, :status, :current_player, :turn_order
+  attributes :game_id,
+						 :competitors,
+						 :game_cards,
+						 :trash,
+						 :status,
+						 :current_player,
+						 :turn_order,
+						 :attack_stack
 
   has_many :decks
 
@@ -19,4 +26,11 @@ class GameSerializer < ActiveModel::Serializer
       result
     end
   end
+
+	def attack_stack
+		object.competitors.reduce({}) do |result, competitor|
+      result[competitor.player_id] = competitor.attacks
+			result
+    end
+	end
 end
