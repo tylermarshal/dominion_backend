@@ -53,35 +53,36 @@ describe("Game API") do
       Game.new_game([player_1.id, player_2.id]).save!
       game = Game.all.last
 
-      deck_1 = game.decks[0]
+      deck_1 = game.decks.find_by(competitor_id: game.competitors.find_by(player_id: player_1.id).id)
       deck_1.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
       deck_1.discard = []
-      deck_2 = game.decks[1]
-      deck_1.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
-      deck_1.discard = []
+			deck_2 = game.decks.find_by(competitor_id: game.competitors.find_by(player_id: player_2.id).id)
+      deck_2.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
+      deck_2.discard = []
 
       deck_1_new_draw = ['copper', 'copper', 'estate', 'copper', 'copper']
       deck_1_new_discard = ['copper', 'copper', 'copper', 'estate', 'estate', 'silver']
 
-      cards_played = ['copper', 'copper', 'copper']
+      cards_played = ['copper', 'copper', 'copper', 'militia']
       cards_gained = ['silver']
-      cards_trashed = []
+      cards_trashed = ['copper', 'estate']
+
+			new_supply = game.game_cards.reduce({}) do |supply, game_card|
+				supply[game_card.card.name] = game_card.quantity - 1
+				supply
+			end
+
+			attacks_played = ['militia']
 
       params = {
-        decks: [
-          {
-            deck_id: deck_1.id,
-            draw: deck_1_new_draw,
-            discard: deck_1_new_discard
-            },
-          {
-            deck_id: deck_2.id,
-            draw: deck_2.draw,
-            discard: deck_2.discard
-            }
-        ],
+				supply: new_supply,
+				trash: ['copper', 'estate'],
+				attack_stack: {"#{player_1.id}": [], "#{player_2.id}": attacks_played},
+				deck: {
+					draw: deck_1_new_draw,
+					discard: deck_1_new_discard
+				},
         turn: {
-          competitor_id: deck_1.competitor.id,
           coins: 3,
           cards_played: cards_played,
           cards_gained: cards_gained,
@@ -97,8 +98,17 @@ describe("Game API") do
       deck_1 = game.decks.find(deck_1.id)
       deck_2 = game.decks.find(deck_2.id)
       new_turn = game.turns.first
+			competitor_2 = game.competitors.find_by(player_id: player_2.id)
+
+			db_supply = game.game_cards.reduce({}) do |supply, game_card|
+				supply[game_card.card.name] = game_card.quantity
+				supply
+			end
 
       expect(game.turns.count).to eq(1)
+			expect(game.trash).to eq(cards_trashed)
+			expect(competitor_2.attacks).to eq(attacks_played)
+			expect(db_supply).to eq(new_supply)
       expect(deck_1.draw).to eq(deck_1_new_draw)
       expect(deck_1.discard).to eq(deck_1_new_discard)
       expect(new_turn.competitor).to eq(deck_1.competitor)
@@ -106,6 +116,7 @@ describe("Game API") do
       expect(new_turn.cards_played).to eq(cards_played)
       expect(new_turn.cards_gained).to eq(cards_gained)
       expect(new_turn.cards_trashed).to eq(cards_trashed)
+			expect(game.current_player).to eq(player_2.id)
     end
   end
 

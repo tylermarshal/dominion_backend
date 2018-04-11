@@ -32,26 +32,32 @@ class Game < ApplicationRecord
     end
   end
 
-  def update_decks(deck_changes)
-    deck_changes.each do |deck_updates|
-      deck = decks.find(deck_updates["deck_id"])
-      deck.update(
-        draw: deck_updates["draw"],
-        discard: deck_updates["discard"]
-      )
-    end
+  def update_deck(deck_updates)
+    deck = decks.find_by(competitor_id: competitors.find_by(player_id: current_player).id)
+    deck.update(
+      draw: deck_updates["draw"],
+      discard: deck_updates["discard"]
+    )
   end
 
-  def update_game_card_quantities(cards_gained)
-    cards_gained.each do |card|
+	def update_attacks(attacks)
+		attacks.each do |attack|
+			competitors.find_by(player_id: attack).update(attacks: attacks[attack])
+		end
+	end
+
+  def update_game_card_quantities(supply)
+    supply.each do |card|
       game_card = game_cards.find_by(card_id: Card.find_by(name: card).id)
-      game_card.update(quantity: (game_card.quantity - 1) )
+      game_card.update(quantity: supply[card])
     end
   end
 
   def update_trash(trashed_cards)
-    trashed_cards.each do |card|
-      trash << card
-    end
+    update(trash: trashed_cards)
   end
+
+	def set_current_player
+		update(current_player: turn_order[(turns.count + 1) % competitors.count])
+	end
 end
