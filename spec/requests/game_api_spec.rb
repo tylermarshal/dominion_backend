@@ -41,8 +41,8 @@ describe("Game API") do
       expect(decks.first[:deck_makeup][:estate]).to eq(3)
       expect(new_game[:current_player]).to eq(player_1.id)
       expect(new_game[:turn_order].count).to eq(2)
-			expect(new_game[:attack_stack].keys.count).to eq(2)
-			expect(new_game[:attack_stack][new_game[:current_player].to_s.to_sym]).to be_a Array
+			expect(new_game[:attack_queue].keys.count).to eq(2)
+			expect(new_game[:attack_queue][new_game[:current_player].to_s.to_sym]).to be_a Array
     end
   end
 
@@ -77,7 +77,7 @@ describe("Game API") do
       params = {
 				supply: new_supply,
 				trash: ['copper', 'estate'],
-				attack_stack: {"#{player_1.id}": [], "#{player_2.id}": attacks_played},
+				attack_queue: {"#{player_1.id}": [], "#{player_2.id}": attacks_played},
 				deck: {
 					draw: deck_1_new_draw,
 					discard: deck_1_new_discard

@@ -6,7 +6,7 @@ class Turn < ApplicationRecord
     game = Game.find(params[:id])
     turn = params["turn"]
     game.update_deck(params["deck"])
-		game.update_attacks(params["attack_stack"])
+		game.update_attacks(params["attack_queue"])
     game.update_game_card_quantities(params['supply'])
     game.update_trash(params['trash'])
     turn = Turn.new(
