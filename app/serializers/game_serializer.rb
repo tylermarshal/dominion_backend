@@ -6,7 +6,7 @@ class GameSerializer < ActiveModel::Serializer
 						 :status,
 						 :current_player,
 						 :turn_order,
-						 :attack_stack
+						 :attack_queue
 
   has_many :decks
 
@@ -27,7 +27,7 @@ class GameSerializer < ActiveModel::Serializer
     end
   end
 
-	def attack_stack
+	def attack_queue
 		object.competitors.reduce({}) do |result, competitor|
       result[competitor.player_id] = competitor.attacks
 			result
