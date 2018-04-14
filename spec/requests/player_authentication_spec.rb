@@ -109,6 +109,33 @@ describe('Player API') do
 	end
 
 	context('SEARCH players by username/phone number') do
+		it('returns all players with partial username match') do
+			player_1 = create(:player, username: 'maxscores')
+			player_2 = create(:player, username: 'maxhouse')
+			player_3 = create(:player, username: 'maximum')
+			player_4 = create(:player, username: 'tmadsen')
+			player_5 = create(:player, username: 'stackmaxhouse')
 
+			params = {user_query: 'max'}
+
+			get "/api/v1/players", params: params, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+
+			response_body = JSON.parse(response.body, symbolize_names: true)
+
+			expect(response.status).to eq(200)
+			expect(response_body[:players].count).to eq(4)
+			expect(response_body[:players][0][:id]).to eq(player_1.id)
+			expect(response_body[:players][0][:username]).to eq(player_1.username)
+			expect(response_body[:players][0][:token]).to be_nil
+			expect(response_body[:players][1][:id]).to eq(player_2.id)
+			expect(response_body[:players][1][:username]).to eq(player_2.username)
+			expect(response_body[:players][1][:token]).to be_nil
+			expect(response_body[:players][2][:id]).to eq(player_3.id)
+			expect(response_body[:players][2][:username]).to eq(player_3.username)
+			expect(response_body[:players][2][:token]).to be_nil
+			expect(response_body[:players][3][:id]).to eq(player_5.id)
+			expect(response_body[:players][3][:username]).to eq(player_5.username)
+			expect(response_body[:players][3][:token]).to be_nil
+		end
 	end
 end
