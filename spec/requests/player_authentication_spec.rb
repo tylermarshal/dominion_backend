@@ -7,9 +7,13 @@ describe('Player API') do
 
 	context('POST player') do
 		it('creates a new player') do
-			params = {username: 'Lord Rattington', password: 'password', phone_number: '999-999-9999'}
+			params = {
+				username: 'Lord Rattington',
+				password: 'password',
+				phone_number: '9999999999'
+			}
 
-			post "/api/v1/players", params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+			post "/api/v1/signup", params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
 
 			expect(response).to be_success
 			new_player = JSON.parse(response.body, symbolize_names: true)
@@ -25,7 +29,7 @@ describe('Player API') do
 			create(:player, username: 'Lord Rattington')
 			params = {username: 'Lord Rattington', password: 'password', phone_number: '9999999999'}
 
-			post "/api/v1/players", params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+			post "/api/v1/signup", params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
 
 			response_body = JSON.parse(response.body, symbolize_names: true)
 
@@ -37,7 +41,7 @@ describe('Player API') do
 			create(:player, phone_number: '9999999999')
 			params = {username: 'Lord Rattington', password: 'password', phone_number: '9999999999'}
 
-			post "/api/v1/players", params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+			post "/api/v1/signup", params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
 
 			response_body = JSON.parse(response.body, symbolize_names: true)
 
@@ -51,7 +55,7 @@ describe('Player API') do
 			player = create(:player, username: 'Lord Rattington', phone_number: '9999999999', password: 'password')
 			params = {username: 'Lord Rattington', password: 'password'}
 
-			get "/api/v1/player", params: params, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+			get "/api/v1/login", params: params, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
 
 			response_body = JSON.parse(response.body, symbolize_names: true)
 
@@ -70,7 +74,7 @@ describe('Player API') do
 
 			params = {username: 'Lord Rattington', password: 'password'}
 
-			get "/api/v1/player", params: params, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+			get "/api/v1/login", params: params, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
 
 			response_body = JSON.parse(response.body, symbolize_names: true)
 
@@ -87,7 +91,7 @@ describe('Player API') do
 			create(:player, username: 'Lord Rattington', phone_number: '9999999999')
 			params = {username: 'Lord Rattington'}
 
-			get "/api/v1/player", params: params, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+			get "/api/v1/login", params: params, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
 
 			response_body = JSON.parse(response.body, symbolize_names: true)
 
@@ -99,7 +103,7 @@ describe('Player API') do
 			create(:player, username: 'Lord Rattington', phone_number: '9999999999')
 			params = {password: 'password'}
 
-			get "/api/v1/player", params: params, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+			get "/api/v1/login", params: params, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
 
 			response_body = JSON.parse(response.body, symbolize_names: true)
 
