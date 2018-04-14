@@ -18,6 +18,7 @@ describe('Player API') do
 			expect(new_player[:id]).to eq(last_player.id)
 			expect(new_player[:username]).to eq(last_player.username)
 			expect(new_player[:token]).to be_truthy
+			expect(new_player[:games]).to be_empty
 		end
 
 		it('username is not unique') do
@@ -58,6 +59,28 @@ describe('Player API') do
 			expect(response_body[:id]).to eq(player.id)
 			expect(response_body[:username]).to eq(player.username)
 			expect(response_body[:token]).to eq(player.token)
+		end
+
+		it('can retrieve player and see their games') do
+			player = create(:player, username: 'Lord Rattington', phone_number: '9999999999', password: 'password')
+			player_2 = create(:player)
+			game_1 = create(:game, players: [player, player_2])
+			create(:game, players: [player, player_2])
+			game_3 = create(:game, players: [player, player_2])
+
+			params = {username: 'Lord Rattington', password: 'password'}
+
+			get "/api/v1/player", params: params, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+
+			response_body = JSON.parse(response.body, symbolize_names: true)
+
+			expect(response.status).to eq(200)
+			expect(response_body[:id]).to eq(player.id)
+			expect(response_body[:username]).to eq(player.username)
+			expect(response_body[:token]).to eq(player.token)
+			expect(response_body[:games].count).to eq(3)
+			expect(response_body[:games].first).to eq(game_1.id)
+			expect(response_body[:games].last).to eq(game_3.id)
 		end
 
 		it('cant retrieve player with only username') do
