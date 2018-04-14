@@ -1,6 +1,17 @@
 require 'rails_helper'
+require 'rake'
 
 describe("Game API") do
+	before(:all) do
+		load File.expand_path("../../../lib/tasks/import_cards.rake", __FILE__)
+		Rake::Task.define_task(:environment)
+		Rake::Task['import_cards'].invoke
+	end
+
+	after(:all) do
+		DatabaseCleaner.clean
+	end
+
   context("Post Game") do
     it("creates a new game with 2 players") do
       player_1 = create(:player)
@@ -122,6 +133,7 @@ describe("Game API") do
 
   context("Get Game") do
     it("gets game with id") do
+
       player_1 = create(:player)
       player_2 = create(:player)
 
@@ -142,7 +154,7 @@ describe("Game API") do
       game_state_id = game_state[:game_id]
       decks = game_state[:decks]
 
-      expect(competitors).to eq(new_game.competitors.pluck(:id))
+      expect(competitors).to eq(new_game.players.pluck(:id))
       expect(trash).to be_a(Array)
       expect(trash).to be_empty
       expect(status).to eq('active')
