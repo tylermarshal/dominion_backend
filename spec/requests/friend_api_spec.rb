@@ -38,6 +38,30 @@ describe('Friend API') do
 	end
 
 	context('DELETE friend') do
+		it "can delete a friendship with player" do
+			player_1 = create(:player)
+			player_2 = create(:player)
+			create(:friend, player_id: player_1.id, friend_id: player_2.id)
+			params = {player_id: player_1.id, friend_id: player_2.id}
 
+			delete '/api/v1/friends', params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+
+			expect(response).to be_success
+			response_body = JSON.parse(response.body, symbolize_names: true)
+
+			expect(response_body[:message]).to eq('Friendship deleted')
+		end
+
+		it "fails to add a friend because of an incorrect id" do
+			player_1 = create(:player)
+
+			params = {player_id: player_1.id, friend_id: nil}
+
+			delete '/api/v1/friends', params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+
+			response_body = JSON.parse(response.body, symbolize_names: true)
+			expect(response.status).to eq(400)
+			expect(response_body[:message]).to eq('Friendship could not be deleted')
+		end
 	end
 end
