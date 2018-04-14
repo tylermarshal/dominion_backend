@@ -6,7 +6,7 @@ class Api::V1::PlayersController < ApplicationController
 		else
 			render json: {message: 'Username and Phone Number must be unique'}, status: 400
 		end
-	ends
+	end
 
 	private
 		def user_params
