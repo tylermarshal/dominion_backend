@@ -2,7 +2,7 @@ class Api::V1::FriendsController < ApplicationController
 	def create
 		friendship = Friend.new(friend_params)
 		if friendship.save
-			render json: friendship
+			render json: friendship.friend
 		else
 			render json: {message: 'Friendship could not be saved'}, status: 400
 		end
