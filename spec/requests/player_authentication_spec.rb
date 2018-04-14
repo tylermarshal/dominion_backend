@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 describe('Player API') do
+	before(:each) do
+		DatabaseCleaner.clean
+	end
+
 	context('POST player') do
 		it('creates a new player') do
 			params = {username: 'Lord Rattington', password: 'password', phone_number: '999-999-9999'}
@@ -11,7 +15,7 @@ describe('Player API') do
 			new_player = JSON.parse(response.body, symbolize_names: true)
 			last_player = Player.last
 
-			expect(new_player[:player_id]).to eq(last_player.id)
+			expect(new_player[:id]).to eq(last_player.id)
 			expect(new_player[:username]).to eq(last_player.username)
 		end
 
@@ -23,9 +27,8 @@ describe('Player API') do
 
 			response_body = JSON.parse(response.body, symbolize_names: true)
 
-			expect(response).to_not be_success
 			expect(response.status).to eq(400)
-			expect(response_body.message).to eq('Username and Phone Number must be unique')
+			expect(response_body[:message]).to eq('Username and Phone Number must be unique')
 		end
 
 		it('phone number is not unique') do
@@ -36,9 +39,8 @@ describe('Player API') do
 
 			response_body = JSON.parse(response.body, symbolize_names: true)
 
-			expect(response).to_not be_success
 			expect(response.status).to eq(400)
-			expect(response_body.message).to eq('Username and Phone Number must be unique')
+			expect(response_body[:message]).to eq('Username and Phone Number must be unique')
 		end
 	end
 
