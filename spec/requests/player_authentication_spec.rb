@@ -17,6 +17,7 @@ describe('Player API') do
 
 			expect(new_player[:id]).to eq(last_player.id)
 			expect(new_player[:username]).to eq(last_player.username)
+			expect(new_player[:token]).to be_truthy
 		end
 
 		it('username is not unique') do
@@ -45,7 +46,43 @@ describe('Player API') do
 	end
 
 	context('GET player by credentials') do
+		it('can retrieve player with correct credentials') do
+			player = create(:player, username: 'Lord Rattington', phone_number: '9999999999', password: 'password')
+			params = {username: 'Lord Rattington', password: 'password'}
 
+			get "/api/v1/player", params: params, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+
+			response_body = JSON.parse(response.body, symbolize_names: true)
+
+			expect(response.status).to eq(200)
+			expect(response_body[:id]).to eq(player.id)
+			expect(response_body[:username]).to eq(player.username)
+			expect(response_body[:token]).to eq(player.token)
+		end
+
+		it('cant retrieve player with only username') do
+			create(:player, username: 'Lord Rattington', phone_number: '9999999999')
+			params = {username: 'Lord Rattington'}
+
+			get "/api/v1/player", params: params, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+
+			response_body = JSON.parse(response.body, symbolize_names: true)
+
+			expect(response.status).to eq(400)
+			expect(response_body[:message]).to eq('User could not be found')
+		end
+
+		it('cant retrieve player with only password') do
+			create(:player, username: 'Lord Rattington', phone_number: '9999999999')
+			params = {password: 'password'}
+
+			get "/api/v1/player", params: params, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+
+			response_body = JSON.parse(response.body, symbolize_names: true)
+
+			expect(response.status).to eq(400)
+			expect(response_body[:message]).to eq('User could not be found')
+		end
 	end
 
 	context('SEARCH players by username/phone number') do
