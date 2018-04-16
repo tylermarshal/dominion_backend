@@ -3,7 +3,7 @@ class PlayerSerializer < ActiveModel::Serializer
 
 	def games
 		object.games.map do |game|
-			game.id
+			{id: game.id, players: game.players.pluck(:username)}
 		end
 	end
 end
