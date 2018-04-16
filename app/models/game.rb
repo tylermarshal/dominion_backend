@@ -58,6 +58,8 @@ class Game < ApplicationRecord
   end
 
 	def set_current_player
-		update(current_player: turn_order[(turns.count + 1) % competitors.count])
+		next_player = Player.find(turn_order[(turns.count + 1) % competitors.count])
+		NotificationService.send_notification(next_player.token, id)
+		update(current_player: next_player.id)
 	end
 end
