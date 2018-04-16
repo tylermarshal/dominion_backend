@@ -13,7 +13,7 @@ describe('Friend API') do
 		it "can add a friend to a player" do
 			player_1 = create(:player)
 			player_2 = create(:player)
-			params = {player_id: player_1.id, friend_id: player_2.id}
+			params = {player_id: player_1.id, friend_name: player_2.username}
 
 			post '/api/v1/friends', params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
 
@@ -27,7 +27,7 @@ describe('Friend API') do
 		it "fails to add a friend because of an incorrect id" do
 			player_1 = create(:player)
 
-			params = {player_id: player_1.id, friend_id: nil}
+			params = {player_id: player_1.id, friend_name: nil}
 
 			post '/api/v1/friends', params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
 
