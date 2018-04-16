@@ -88,9 +88,9 @@ describe('Player API') do
 			expect(response_body[:games].first[:players]).to eq([player.username, player_2.username])
 			expect(response_body[:games].last[:id]).to eq(game_3.id)
 			expect(response_body[:games].last[:players]).to eq([player.username, player_2.username])
-			expect(response_body[:players].count).to eq(1)
-			expect(response_body[:players].first[:id]).to eq(player_2.id)
-			expect(response_body[:players].first[:username]).to eq(player_2.username)
+			expect(response_body[:friends].count).to eq(1)
+			expect(response_body[:friends].first[:id]).to eq(player_2.id)
+			expect(response_body[:friends].first[:username]).to eq(player_2.username)
 		end
 
 		it('cant retrieve player with only username') do
