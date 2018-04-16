@@ -1,5 +1,6 @@
 class GameSerializer < ActiveModel::Serializer
   attributes :game_id,
+						 :players,
 						 :competitors,
 						 :game_cards,
 						 :trash,
@@ -11,16 +12,18 @@ class GameSerializer < ActiveModel::Serializer
 
   has_many :decks
   has_many :turns
-	
+
 
   def game_id
     object.id
   end
 
+	def players
+		object.players.pluck(:username)
+	end
+
   def competitors
-    object.competitors.map do |competitor|
-      competitor.player_id
-    end
+    object.players.pluck(:id)
   end
 
   def game_cards
