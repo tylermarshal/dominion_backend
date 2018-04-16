@@ -1,5 +1,5 @@
 class DeckSerializer < ActiveModel::Serializer
-  attributes :id, :player_id, :draw, :discard, :deck_makeup
+  attributes :id, :player_id, :username, :draw, :discard, :deck_makeup
 
   def deck_makeup
     full_deck = []
@@ -14,5 +14,9 @@ class DeckSerializer < ActiveModel::Serializer
 
   def player_id
     object.competitor.player_id
+  end
+
+  def username
+    object.competitor.player.username
   end
 end
