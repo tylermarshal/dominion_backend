@@ -1,8 +1,14 @@
 class PlayerSerializer < ActiveModel::Serializer
-	attributes :id, :username, :token, :games, :friends
+	attributes :id, :username, :token, :active_games, :complete_games, :friends
 
-	def games
-		object.games.map do |game|
+	def active_games
+		object.games.active_games.map do |game|
+			{id: game.id, players: game.players.pluck(:username), current: game.current_player_username}
+		end
+	end
+
+	def complete_games
+		object.games.complete_games.map do |game|
 			{id: game.id, players: game.players.pluck(:username), current: game.current_player_username}
 		end
 	end
