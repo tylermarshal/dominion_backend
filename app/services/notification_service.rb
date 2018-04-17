@@ -4,10 +4,10 @@ class NotificationService
 		message = [{
 			to: token,
 			title: 'Dominion with Friends',
-			body: "It's your turn in Game #{game_id}"
+			body: "It's your turn in Game #{game_id}",
+			badge: 1
 		}]
 
 		client.publish message
 	end
-
 end
