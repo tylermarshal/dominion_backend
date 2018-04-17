@@ -23,7 +23,7 @@ class Turn < ApplicationRecord
         depleted_counter += 1
       end
     end
-    if depleted_counter > 2 || game.game_cards.find_by(card_id: 64).quantity == 0
+    if depleted_counter > 2 || game.game_cards.find_by(card_id: Card.find_by(name: "Province").id).quantity == 0
       game.update(status: "complete")
     end
     if game.status == "active"
