@@ -62,4 +62,8 @@ class Game < ApplicationRecord
 		NotificationService.send_notification(next_player.token, id)
 		update(current_player: next_player.id)
 	end
+
+	def current_player_username
+		Player.find(current_player).username
+	end
 end
