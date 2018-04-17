@@ -21,7 +21,7 @@ describe('Player API') do
 
 			expect(new_player[:id]).to eq(last_player.id)
 			expect(new_player[:username]).to eq(last_player.username)
-			expect(new_player[:token]).to be_truthy
+			expect(new_player[:token]).to be_nil
 			expect(new_player[:games]).to be_empty
 		end
 
@@ -68,10 +68,11 @@ describe('Player API') do
 		it('can retrieve player, see their games and friends') do
 			player = create(:player, username: 'Lord Rattington', phone_number: '9999999999', password: 'password')
 			player_2 = create(:player)
-			game_1 = create(:game, players: [player, player_2])
-			create(:game, players: [player, player_2])
-			game_3 = create(:game, players: [player, player_2])
+			game_1 = create(:game, players: [player, player_2], current_player: player.id)
+			create(:game, players: [player, player_2], current_player: player.id)
+			game_3 = create(:game, players: [player, player_2], current_player: player.id)
 			create(:friend, player_id: player.id, friend_id: player_2.id)
+
 
 			params = {username: 'Lord Rattington', password: 'password'}
 
@@ -115,6 +116,34 @@ describe('Player API') do
 
 			expect(response.status).to eq(400)
 			expect(response_body[:message]).to eq('User could not be found')
+		end
+	end
+
+	context('GET player by id') do
+		it('can retrieve player, see their games and friends') do
+			player = create(:player, username: 'Lord Rattington', phone_number: '9999999999', password: 'password')
+			player_2 = create(:player)
+			game_1 = create(:game, players: [player, player_2], current_player: player.id)
+			create(:game, players: [player, player_2], current_player: player.id)
+			game_3 = create(:game, players: [player, player_2], current_player: player.id)
+			create(:friend, player_id: player.id, friend_id: player_2.id)
+
+			get "/api/v1/players/#{player.id}", headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+
+			response_body = JSON.parse(response.body, symbolize_names: true)
+
+			expect(response.status).to eq(200)
+			expect(response_body[:id]).to eq(player.id)
+			expect(response_body[:username]).to eq(player.username)
+			expect(response_body[:token]).to eq(player.token)
+			expect(response_body[:games].count).to eq(3)
+			expect(response_body[:games].first[:id]).to eq(game_1.id)
+			expect(response_body[:games].first[:players]).to eq([player.username, player_2.username])
+			expect(response_body[:games].last[:id]).to eq(game_3.id)
+			expect(response_body[:games].last[:players]).to eq([player.username, player_2.username])
+			expect(response_body[:friends].count).to eq(1)
+			expect(response_body[:friends].first[:id]).to eq(player_2.id)
+			expect(response_body[:friends].first[:username]).to eq(player_2.username)
 		end
 	end
 
