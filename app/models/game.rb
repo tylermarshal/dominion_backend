@@ -60,7 +60,7 @@ class Game < ApplicationRecord
 	def set_current_player
 		next_player = Player.find(turn_order[(turns.count + 1) % competitors.count])
 		if next_player.token
-			NotificationService.send_notification(next_player.token, id)
+			NotificationService.send_turn_notification(next_player.token, id)
 		end
 		update(current_player: next_player.id)
 	end
@@ -68,4 +68,29 @@ class Game < ApplicationRecord
 	def current_player_username
 		Player.find(current_player).username
 	end
+
+  def score
+    competitors.reduce(Hash.new(0)) do |result, competitor|
+      full_deck = competitor.deck.draw + competitor.deck.discard
+      result[competitor.player.username] = 0
+      full_deck.each do |card|
+        if VICTORY_CARDS[card]
+          result[competitor.player.username] += VICTORY_CARDS[card]
+        end
+      end
+      result
+    end
+  end
+
+  def determine_victor_order
+    score.sort_by do |username, player_score|
+      player_score
+    end.reverse
+  end
+
+  VICTORY_CARDS = {
+    'estate' => 1,
+    'duchy' => 3,
+    'province' => 6
+  }
 end

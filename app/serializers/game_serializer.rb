@@ -42,21 +42,6 @@ class GameSerializer < ActiveModel::Serializer
 	end
 
   def score
-    object.competitors.reduce(Hash.new(0)) do |result, competitor|
-      full_deck = competitor.deck.draw + competitor.deck.discard
-      result[competitor.player.username] = 0
-      full_deck.each do |card|
-        if VICTORY_CARDS[card]
-          result[competitor.player.username] += VICTORY_CARDS[card]
-        end
-      end
-      result
-    end
+    object.score
   end
-
-  VICTORY_CARDS = {
-    'estate' => 1,
-    'duchy' => 3,
-    'province' => 6
-  }
 end
