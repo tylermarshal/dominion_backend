@@ -10,6 +10,9 @@ class Game < ApplicationRecord
 
   enum status: [:active, :complete]
 
+  scope :active_games, -> { where(status: 'active') }
+  scope :complete_games, -> { where(status: 'complete') }
+
   def self.new_game(players)
     new_game = Game.new(trash: [])
     if Player.exists?(id: players)
