@@ -22,7 +22,7 @@ describe('Player API') do
 			expect(new_player[:id]).to eq(last_player.id)
 			expect(new_player[:username]).to eq(last_player.username)
 			expect(new_player[:token]).to be_nil
-			expect(new_player[:games]).to be_empty
+			expect(new_player[:active_games]).to be_empty
 		end
 
 		it('username is not unique') do
@@ -65,7 +65,7 @@ describe('Player API') do
 			expect(response_body[:token]).to eq(player.token)
 		end
 
-		it('can retrieve player, see their games and friends') do
+		it('can retrieve player, see their active_games and friends') do
 			player = create(:player, username: 'Lord Rattington', phone_number: '9999999999', password: 'password')
 			player_2 = create(:player)
 			game_1 = create(:game, players: [player, player_2], current_player: player.id)
@@ -84,11 +84,11 @@ describe('Player API') do
 			expect(response_body[:id]).to eq(player.id)
 			expect(response_body[:username]).to eq(player.username)
 			expect(response_body[:token]).to eq(player.token)
-			expect(response_body[:games].count).to eq(3)
-			expect(response_body[:games].first[:id]).to eq(game_1.id)
-			expect(response_body[:games].first[:players]).to eq([player.username, player_2.username])
-			expect(response_body[:games].last[:id]).to eq(game_3.id)
-			expect(response_body[:games].last[:players]).to eq([player.username, player_2.username])
+			expect(response_body[:active_games].count).to eq(3)
+			expect(response_body[:active_games].first[:id]).to eq(game_1.id)
+			expect(response_body[:active_games].first[:players]).to eq([player.username, player_2.username])
+			expect(response_body[:active_games].last[:id]).to eq(game_3.id)
+			expect(response_body[:active_games].last[:players]).to eq([player.username, player_2.username])
 			expect(response_body[:friends].count).to eq(1)
 			expect(response_body[:friends].first[:id]).to eq(player_2.id)
 			expect(response_body[:friends].first[:username]).to eq(player_2.username)
@@ -120,7 +120,7 @@ describe('Player API') do
 	end
 
 	context('GET player by id') do
-		it('can retrieve player, see their games and friends') do
+		it('can retrieve player, see their active_games and friends') do
 			player = create(:player, username: 'Lord Rattington', phone_number: '9999999999', password: 'password')
 			player_2 = create(:player)
 			game_1 = create(:game, players: [player, player_2], current_player: player.id)
@@ -136,11 +136,11 @@ describe('Player API') do
 			expect(response_body[:id]).to eq(player.id)
 			expect(response_body[:username]).to eq(player.username)
 			expect(response_body[:token]).to eq(player.token)
-			expect(response_body[:games].count).to eq(3)
-			expect(response_body[:games].first[:id]).to eq(game_1.id)
-			expect(response_body[:games].first[:players]).to eq([player.username, player_2.username])
-			expect(response_body[:games].last[:id]).to eq(game_3.id)
-			expect(response_body[:games].last[:players]).to eq([player.username, player_2.username])
+			expect(response_body[:active_games].count).to eq(3)
+			expect(response_body[:active_games].first[:id]).to eq(game_1.id)
+			expect(response_body[:active_games].first[:players]).to eq([player.username, player_2.username])
+			expect(response_body[:active_games].last[:id]).to eq(game_3.id)
+			expect(response_body[:active_games].last[:players]).to eq([player.username, player_2.username])
 			expect(response_body[:friends].count).to eq(1)
 			expect(response_body[:friends].first[:id]).to eq(player_2.id)
 			expect(response_body[:friends].first[:username]).to eq(player_2.username)
