@@ -19,7 +19,7 @@ class Game < ApplicationRecord
         player = Player.find(player_id)
         new_game.players << player
       end
-      new_game.game_cards << GameCard.new_game
+      new_game.game_cards << GameCard.new_game(players)
     end
     new_game
   end
