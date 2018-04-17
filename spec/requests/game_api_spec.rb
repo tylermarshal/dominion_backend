@@ -153,6 +153,7 @@ describe("Game API") do
       game_cards = game_state[:game_cards]
       game_state_id = game_state[:game_id]
       decks = game_state[:decks]
+			score = game_state[:score]
 
       expect(competitors).to eq(new_game.players.pluck(:id))
       expect(trash).to be_a(Array)
@@ -161,6 +162,7 @@ describe("Game API") do
       expect(game_cards).to be_a(Hash)
       expect(game_cards.count).to eq(17)
       expect(game_state_id).to eq(new_game.id)
+			expect(score).to be_a(Hash)
       expect(decks.count).to eq(2)
       expect(decks.first[:player_id]).to be_a(Integer)
       expect(decks.first[:id]).to be_a(Integer)
