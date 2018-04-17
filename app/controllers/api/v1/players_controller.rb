@@ -5,6 +5,15 @@ class Api::V1::PlayersController < ApplicationController
 	end
 
 	def show
+		player = Player.find(user_params[:id])
+		if player
+			render json: player
+		else
+			render json: {message: 'User could not be found'}, status: 400
+		end
+	end
+
+	def login
 		player = Player.find_by(username: user_params[:username])
 		if player && player.authenticate(user_params[:password])
 			render json: player
@@ -24,7 +33,7 @@ class Api::V1::PlayersController < ApplicationController
 
 	private
 		def user_params
-			params.permit(:username, :password, :phone_number)
+			params.permit(:id, :username, :password, :phone_number)
 		end
 
 		def search_params
