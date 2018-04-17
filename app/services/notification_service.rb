@@ -5,6 +5,7 @@ class NotificationService
 			to: token,
 			title: 'Dominion with Friends',
 			body: "It's your turn in Game #{game_id}",
+			data: {id: game_id},
 			badge: 1
 		}]
 
