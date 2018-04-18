@@ -2,7 +2,7 @@
 
 This repo is backend API for the the Dominion with Friends mobile phone application built with React Native. This API is built using Ruby on Rails with multiple endpoints that provide the game with the needed data. The game is built "Words with Friends" style, which allow a user to start a game and play their turn. The game state at that point is then captured and POSTed to the backend. A notification is sent to the player who's turn is next and they make a GET request to retreive the game state and their hand. This process repeats until the game ends and a notifiction is provided to declare a winner.
 
-On Heroku: http://dominion-backend.herokuapp.com/api/v1
+On Heroku: https://dominion-backend.herokuapp.com/api/v1
 
 ## Endpoints
 
