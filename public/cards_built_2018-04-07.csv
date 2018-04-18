@@ -6,7 +6,7 @@ Vassal,Dominion,1,,,,,,,3,,,,,,,
 Village,Dominion,1,,,,,,,3,,2,,1,,,
 Moneylender,Dominion,1,,,,,,,4,,,,,,,"Trash a Copper card from your hand. If you do, +3 Coins."
 Smithy,Dominion,1,,,,,,,4,,,,3,,,
-Council Room,Dominion,1,,,,,,,5,,,1,4,,,Each other player draws a card.
+Council_Room,Dominion,1,,,,,,,5,,,1,4,,,Each other player draws a card.
 Festival,Dominion,1,,,,,,,5,,2,1,,2,,
 Laboratory,Dominion,1,,,,,,,5,,1,,2,,,
 Market,Dominion,1,,,,,,,5,,1,1,1,1,,
