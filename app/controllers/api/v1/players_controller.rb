@@ -33,7 +33,7 @@ class Api::V1::PlayersController < ApplicationController
 
 	private
 		def user_params
-			params.permit(:id, :username, :password, :phone_number)
+			params.permit(:id, :username, :password, :phone_number, :token)
 		end
 
 		def search_params
