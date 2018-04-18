@@ -281,3 +281,6 @@ Example Output:
     ]
 }
 ```
+
+## Contributing
+Contributions are welcome. We use [Pivotal Tracker](https://www.pivotaltracker.com/n/projects/2159424) to manage tasks. If you're familiar with the game or want to contribute in other areas feel free to take a card and submit a PR. We'll review it as them come.
