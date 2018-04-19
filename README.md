@@ -140,7 +140,7 @@ POST '/games/:id/turns', Body:
   }
 ```
 
-output: status 200, if ok. 
+output: status 200, if ok.
 
 
 ### User Sign Up
@@ -154,46 +154,36 @@ POST 'api/v1/signup', Body:
 }
 ```
 
+### Get a Friend
+
+Get '/api/v1/friends/:id'
+
+Example Response:
+```
+{
+    "id": [:id],
+    "username": friend_username,
+    "player_id": int,
+    "games_played": int
+}
+```
+
 ### Add a Friend
 
 POST '/api/v1/friends', Body:
 ```
 {
   player_id: your_id,
-  friend_name: friend_fusername
+  friend_name: friend_username
 }
 ```
 Example Response:
 ```
 {
-    "id": 11,
-    "username": "WalterWhite",
-    "token": null,
-    "active_games": [
-        {
-            "id": 40,
-            "players": [
-                "WalterWhite",
-                "Umber"
-            ],
-            "current": "WalterWhite"
-        }
-    ],
-    "complete_games": [
-        {
-            "id": 20,
-            "players": [
-                "WalterWhite",
-                "Maxscores"
-            ]
-        }
-    ],
-    "friends": [
-        {
-            "id": 10,
-            "username": "Maxscores"
-        }
-    ]
+    "id": int,
+    "username": friend_username,
+    "player_id": int,
+    "games_played": int
 }
 ```
 

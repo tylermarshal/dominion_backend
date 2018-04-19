@@ -1,10 +1,19 @@
 class Api::V1::FriendsController < ApplicationController
+	def show
+		friend = Friend.find(friend_params[:id])
+		if friend
+			render json: friend
+		else
+			render json: {message: 'Friendship could not be saved'}, status: 400
+		end
+	end
+
 	def create
 		friend = Player.find_by(username: friend_params[:friend_name])
 		if friend
 			friendship = Friend.new(player_id: friend_params[:player_id], friend_id: friend.id)
 			if friendship.save
-				render json: friendship.friend
+				render json: friendship
 			end
 		else
 			render json: {message: 'Friendship could not be saved'}, status: 400
@@ -26,6 +35,6 @@ class Api::V1::FriendsController < ApplicationController
 
 	private
 		def friend_params
-			params.permit(:player_id, :friend_name, :friend_id)
+			params.permit(:id, :player_id, :friend_name, :friend_id)
 		end
 end
