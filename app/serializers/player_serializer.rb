@@ -15,7 +15,7 @@ class PlayerSerializer < ActiveModel::Serializer
 
 	def friends
 		object.friends.map do |friend|
-			{id: friend.friend.id, username: friend.friend.username}
+			{id: friend.id, username: friend.friend.username, player_id: friend.friend.id}
 		end
 	end
 end
