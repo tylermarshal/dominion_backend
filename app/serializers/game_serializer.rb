@@ -6,6 +6,7 @@ class GameSerializer < ActiveModel::Serializer
 						 :trash,
 						 :status,
 						 :current_player,
+						 :current_player_username,
 						 :turn_order,
 						 :attack_queue,
              :score
@@ -33,6 +34,10 @@ class GameSerializer < ActiveModel::Serializer
       result
     end
   end
+
+	def current_player_username
+		Player.find(object.current_player).username
+	end
 
 	def attack_queue
 		object.competitors.reduce({}) do |result, competitor|
