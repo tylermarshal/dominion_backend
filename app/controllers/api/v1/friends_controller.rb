@@ -22,7 +22,7 @@ class Api::V1::FriendsController < ApplicationController
 
 	def delete
 		friendship = Friend.where(
-			'player_id = ? AND friend_id = ?',
+			'player_id = ? AND friend_id = ?',	
 			friend_params[:player_id],
 			friend_params[:friend_id]).first
 		if friendship

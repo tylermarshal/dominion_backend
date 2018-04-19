@@ -58,34 +58,34 @@ describe("Game API") do
   end
 
   context("Post Turn") do
-    it("creates a new turn with 2 players") do
-      player_1 = create(:player)
-      player_2 = create(:player)
-      Game.new_game([player_1.id, player_2.id]).save!
-      game = Game.all.last
+		it("creates a new turn with 2 players") do
+			player_1 = create(:player)
+			player_2 = create(:player)
+			Game.new_game([player_1.id, player_2.id]).save!
+			game = Game.all.last
 
-      deck_1 = game.decks.find_by(competitor_id: game.competitors.find_by(player_id: player_1.id).id)
-      deck_1.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
-      deck_1.discard = []
+			deck_1 = game.decks.find_by(competitor_id: game.competitors.find_by(player_id: player_1.id).id)
+			deck_1.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
+			deck_1.discard = []
 			deck_2 = game.decks.find_by(competitor_id: game.competitors.find_by(player_id: player_2.id).id)
-      deck_2.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
-      deck_2.discard = []
+			deck_2.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
+			deck_2.discard = []
 
-      deck_1_new_draw = ['copper', 'copper', 'estate', 'copper', 'copper']
-      deck_1_new_discard = ['copper', 'copper', 'copper', 'estate', 'estate', 'silver']
+			deck_1_new_draw = ['copper', 'copper', 'estate', 'copper', 'copper']
+			deck_1_new_discard = ['copper', 'copper', 'copper', 'estate', 'estate', 'silver']
 
-      cards_played = ['copper', 'copper', 'copper', 'militia']
-      cards_gained = ['silver']
-      cards_trashed = ['copper', 'estate']
+			cards_played = ['copper', 'copper', 'copper', 'militia']
+			cards_gained = ['silver']
+			cards_trashed = ['copper', 'estate']
 
 			new_supply = game.game_cards.reduce({}) do |supply, game_card|
-				supply[game_card.card.name] = game_card.quantity - 1
+				supply[game_card.card.name.downcase] = game_card.quantity - 1
 				supply
 			end
 
 			attacks_played = ['militia']
 
-      params = {
+			params = {
 				supply: new_supply,
 				trash: ['copper', 'estate'],
 				attack_queue: {"#{player_1.id}": [], "#{player_2.id}": attacks_played},
@@ -93,75 +93,70 @@ describe("Game API") do
 					draw: deck_1_new_draw,
 					discard: deck_1_new_discard
 				},
-        turn: {
-          coins: 3,
-          cards_played: cards_played,
-          cards_gained: cards_gained,
-          cards_trashed: cards_trashed
-          }
-        }
+				turn: {
+					coins: 3,
+					cards_played: cards_played,
+					cards_gained: cards_gained,
+					cards_trashed: cards_trashed
+				}
+			}
 
-      post "/api/v1/games/#{game.id}/turns", params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+			post "/api/v1/games/#{game.id}/turns", params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
 
-      expect(response).to be_success
+			expect(response).to be_success
+			game = JSON.parse(response.body)
+			
+			deck_1 = game['decks'].find {|d| d['id'] === deck_1.id}
+			deck_2 = game['decks'].find {|d| d['id'] === deck_2.id}
+			new_turn = game['turns'].first
+			competitor_2 = game['competitors'].find {|c| c === player_2.id}
 
-      game = Game.find(game.id)
-      deck_1 = game.decks.find(deck_1.id)
-      deck_2 = game.decks.find(deck_2.id)
-      new_turn = game.turns.first
-			competitor_2 = game.competitors.find_by(player_id: player_2.id)
+			expect(game['turns'].count).to eq(1)
+			expect(game['trash']).to eq(cards_trashed)
+			expect(game['attack_queue'][competitor_2.to_s]).to eq(attacks_played)
+			expect(game['game_cards']).to eq(new_supply)
+			expect(deck_1['draw']).to eq(deck_1_new_draw)
+			expect(deck_1['discard']).to eq(deck_1_new_discard)
+			expect(new_turn['player_id']).to eq(player_1.id)
+			expect(new_turn['coins']).to eq(3)
+			expect(new_turn['cards_played']).to eq(cards_played)
+			expect(new_turn['cards_gained']).to eq(cards_gained)
+			expect(new_turn['cards_trashed']).to eq(cards_trashed)
+			expect(game['current_player']).to eq(player_2.id)
+		end
 
-			db_supply = game.game_cards.reduce({}) do |supply, game_card|
-				supply[game_card.card.name] = game_card.quantity
-				supply
-			end
+		it("turns game to complete when any three piles are depleted") do
+			player_1 = create(:player)
+			player_2 = create(:player)
+			Game.new_game([player_1.id, player_2.id]).save!
+			game = Game.all.last
 
-      expect(game.turns.count).to eq(1)
-			expect(game.trash).to eq(cards_trashed)
-			expect(competitor_2.attacks).to eq(attacks_played)
-			expect(db_supply).to eq(new_supply)
-      expect(deck_1.draw).to eq(deck_1_new_draw)
-      expect(deck_1.discard).to eq(deck_1_new_discard)
-      expect(new_turn.competitor).to eq(deck_1.competitor)
-      expect(new_turn.coins).to eq(3)
-      expect(new_turn.cards_played).to eq(cards_played)
-      expect(new_turn.cards_gained).to eq(cards_gained)
-      expect(new_turn.cards_trashed).to eq(cards_trashed)
-			expect(game.current_player).to eq(player_2.id)
-    end
-
-    it("turns game to complete when any three piles are depleted") do
-      player_1 = create(:player)
-      player_2 = create(:player)
-      Game.new_game([player_1.id, player_2.id]).save!
-      game = Game.all.last
-
-      deck_1 = game.decks.find_by(competitor_id: game.competitors.find_by(player_id: player_1.id).id)
-      deck_1.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
-      deck_1.discard = []
+			deck_1 = game.decks.find_by(competitor_id: game.competitors.find_by(player_id: player_1.id).id)
+			deck_1.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
+			deck_1.discard = []
 			deck_2 = game.decks.find_by(competitor_id: game.competitors.find_by(player_id: player_2.id).id)
-      deck_2.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
-      deck_2.discard = []
+			deck_2.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
+			deck_2.discard = []
 
-      deck_1_new_draw = ['copper', 'copper', 'estate', 'copper', 'copper']
-      deck_1_new_discard = ['copper', 'copper', 'copper', 'estate', 'estate', 'silver']
+			deck_1_new_draw = ['copper', 'copper', 'estate', 'copper', 'copper']
+			deck_1_new_discard = ['copper', 'copper', 'copper', 'estate', 'estate', 'silver']
 
-      cards_played = ['copper', 'copper', 'copper', 'militia']
-      cards_gained = ['silver']
-      cards_trashed = ['copper', 'estate']
+			cards_played = ['copper', 'copper', 'copper', 'militia']
+			cards_gained = ['silver']
+			cards_trashed = ['copper', 'estate']
 
 			new_supply = game.game_cards.reduce({}) do |supply, game_card|
-				supply[game_card.card.name] = game_card.quantity - 1
+				supply[game_card.card.name.downcase] = game_card.quantity - 1
 				supply
 			end
 
-			new_supply['Copper'] = 0
-			new_supply['Duchy'] = 0
-			new_supply['Silver'] = 0
+			new_supply['copper'] = 0
+			new_supply['duchy'] = 0
+			new_supply['silver'] = 0
 
 			attacks_played = ['militia']
 
-      params = {
+			params = {
 				supply: new_supply,
 				trash: ['copper', 'estate'],
 				attack_queue: {"#{player_1.id}": [], "#{player_2.id}": attacks_played},
@@ -169,60 +164,55 @@ describe("Game API") do
 					draw: deck_1_new_draw,
 					discard: deck_1_new_discard
 				},
-        turn: {
-          coins: 3,
-          cards_played: cards_played,
-          cards_gained: cards_gained,
-          cards_trashed: cards_trashed
-          }
-        }
+				turn: {
+					coins: 3,
+					cards_played: cards_played,
+					cards_gained: cards_gained,
+					cards_trashed: cards_trashed
+				}
+			}
 
-      post "/api/v1/games/#{game.id}/turns", params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+			post "/api/v1/games/#{game.id}/turns", params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
 
-      expect(response).to be_success
+			expect(response).to be_success
+			game = JSON.parse(response.body)
 
-      game = Game.find(game.id)
 
-			db_supply = game.game_cards.reduce({}) do |supply, game_card|
-				supply[game_card.card.name] = game_card.quantity
-				supply
-			end
+			expect(game['game_cards']).to eq(new_supply)
+			expect(game['status']).to eq('complete')
 
-			expect(db_supply).to eq(new_supply)
-			expect(game.status).to eq('complete')
+		end
 
-    end
+		it("turns game to complete when the province pile is depleted") do
+			player_1 = create(:player)
+			player_2 = create(:player)
+			Game.new_game([player_1.id, player_2.id]).save!
+			game = Game.all.last
 
-    it("turns game to complete when the province pile is depleted") do
-      player_1 = create(:player)
-      player_2 = create(:player)
-      Game.new_game([player_1.id, player_2.id]).save!
-      game = Game.all.last
-
-      deck_1 = game.decks.find_by(competitor_id: game.competitors.find_by(player_id: player_1.id).id)
-      deck_1.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
-      deck_1.discard = []
+			deck_1 = game.decks.find_by(competitor_id: game.competitors.find_by(player_id: player_1.id).id)
+			deck_1.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
+			deck_1.discard = []
 			deck_2 = game.decks.find_by(competitor_id: game.competitors.find_by(player_id: player_2.id).id)
-      deck_2.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
-      deck_2.discard = []
+			deck_2.draw = ['copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'copper', 'estate', 'estate', 'estate']
+			deck_2.discard = []
 
-      deck_1_new_draw = ['copper', 'copper', 'estate', 'copper', 'copper']
-      deck_1_new_discard = ['copper', 'copper', 'copper', 'estate', 'estate', 'silver']
+			deck_1_new_draw = ['copper', 'copper', 'estate', 'copper', 'copper']
+			deck_1_new_discard = ['copper', 'copper', 'copper', 'estate', 'estate', 'silver']
 
-      cards_played = ['copper', 'copper', 'copper']
-      cards_gained = ['silver']
-      cards_trashed = ['copper', 'estate']
+			cards_played = ['copper', 'copper', 'copper']
+			cards_gained = ['silver']
+			cards_trashed = ['copper', 'estate']
 
 			new_supply = game.game_cards.reduce({}) do |supply, game_card|
-				supply[game_card.card.name] = game_card.quantity - 1
+				supply[game_card.card.name.downcase] = game_card.quantity - 1
 				supply
 			end
 
-			new_supply['Province'] = 0
+			new_supply['province'] = 0
 
 			attacks_played = ['militia']
 
-      params = {
+			params = {
 				supply: new_supply,
 				trash: ['copper', 'estate'],
 				attack_queue: {"#{player_1.id}": [], "#{player_2.id}": attacks_played},
@@ -230,29 +220,24 @@ describe("Game API") do
 					draw: deck_1_new_draw,
 					discard: deck_1_new_discard
 				},
-        turn: {
-          coins: 3,
-          cards_played: cards_played,
-          cards_gained: cards_gained,
-          cards_trashed: cards_trashed
-          }
-        }
+				turn: {
+					coins: 3,
+					cards_played: cards_played,
+					cards_gained: cards_gained,
+					cards_trashed: cards_trashed
+				}
+			}
 
-      post "/api/v1/games/#{game.id}/turns", params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
+			post "/api/v1/games/#{game.id}/turns", params: params.to_json, headers: {"CONTENT_TYPE" => 'application/json', 'ACCEPT' => 'application/json'}
 
-      expect(response).to be_success
+			expect(response).to be_success
+			game = JSON.parse(response.body)
 
-      game = Game.find(game.id)
+			expect(game['game_cards']).to eq(new_supply)
+			expect(game['status']).to eq('complete')
 
-			db_supply = game.game_cards.reduce({}) do |supply, game_card|
-				supply[game_card.card.name] = game_card.quantity
-				supply
-			end
+		end
 
-			expect(db_supply).to eq(new_supply)
-			expect(game.status).to eq('complete')
-
-    end
   end
 
   context("Get Game") do
