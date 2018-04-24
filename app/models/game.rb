@@ -94,6 +94,7 @@ class Game < ApplicationRecord
   VICTORY_CARDS = {
     'estate' => 1,
     'duchy' => 3,
-    'province' => 6
+    'province' => 6,
+    'curse' => -1
   }
 end
