@@ -36,7 +36,9 @@ class GameSerializer < ActiveModel::Serializer
   end
 
 	def current_player_username
-		Player.find(object.current_player).username
+		if object.status == 'active'
+			Player.find(object.current_player).username
+		end
 	end
 
 	def attack_queue
