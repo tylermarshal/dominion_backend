@@ -62,10 +62,14 @@ class Game < ApplicationRecord
 
 	def set_current_player
 		next_player = Player.find(turn_order[(turns.count + 1) % competitors.count].to_i)
-		if next_player.token
-			NotificationService.send_turn_notification(next_player.token, id)
+		send_turn_notification(next_player)
+		update(current_player: next_player.id, last_poke: Time.now())
+	end
+
+	def send_turn_notification(player)
+		if player.token
+			NotificationService.send_turn_notification(player.token, id)
 		end
-		update(current_player: next_player.id)
 	end
 
 	def current_player_username

@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       post '/games', to: 'games#create'
       get '/games/:id', to: 'games#show'
       post '/games/:id/turns', to: 'turns#create'
+      post '/games/:id/notify', to: 'notification#create'
     end
   end
 end

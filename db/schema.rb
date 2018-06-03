@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180414194721) do
+ActiveRecord::Schema.define(version: 20180601002942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 20180414194721) do
     t.integer "status", default: 0
     t.integer "current_player"
     t.integer "turn_order", array: true
+    t.datetime "last_poke"
   end
 
   create_table "players", force: :cascade do |t|
@@ -89,9 +90,9 @@ ActiveRecord::Schema.define(version: 20180414194721) do
     t.integer "coins"
     t.string "cards_played", array: true
     t.string "cards_gained", array: true
+    t.string "cards_trashed", array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "cards_trashed", array: true
     t.index ["competitor_id"], name: "index_turns_on_competitor_id"
     t.index ["game_id"], name: "index_turns_on_game_id"
   end
